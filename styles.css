@@ -41,7 +41,9 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;letter-s
   backdrop-filter:saturate(160%) blur(14px);
   border-bottom:1px solid var(--line);
 }
-.nav__mark img{height:46px;width:auto;object-fit:contain}
+/* Logo PNGs are black-on-white with no alpha. multiply drops the white
+   plate on light backgrounds; dark mode inverts then screens instead. */
+.nav__mark img{height:46px;width:auto;object-fit:contain;mix-blend-mode:multiply}
 .nav__links{display:flex;align-items:center;gap:clamp(1rem,3vw,2.25rem)}
 .nav__links a{
   font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
@@ -153,7 +155,7 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;letter-s
   border-top:1px solid var(--line);padding:clamp(2.5rem,5vw,4rem) var(--pad);
   text-align:center;background:var(--white);
 }
-.footer__mark{height:70px;width:auto;margin:0 auto 1.25rem;object-fit:contain}
+.footer__mark{height:70px;width:auto;margin:0 auto 1.25rem;object-fit:contain;mix-blend-mode:multiply}
 .footer__line{
   font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
   color:var(--ink-soft);margin:0 0 .6rem;
@@ -188,5 +190,6 @@ h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;letter-s
   /* product PNGs are shot on white — keep their plates light */
   .hero__art,.card__img{background:#f7f5f2}
   .hero__art img,.card__img img{mix-blend-mode:normal}
-  .footer__mark,.nav__mark img{filter:invert(1)}
+  /* invert alone leaves an opaque black plate — screen drops it */
+  .footer__mark,.nav__mark img{filter:invert(1);mix-blend-mode:screen}
 }
