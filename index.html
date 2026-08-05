@@ -25,7 +25,9 @@
     <a href="#heritage">Heritage</a>
     <a href="#essentials">Essentials</a>
     <a href="#story">Story</a>
-    <a class="nav__cta" href="#list">Get Notified</a>
+    <button class="nav__cart" id="cartOpen" aria-label="Open cart">
+      Cart<span class="nav__count" id="cartCount" hidden>0</span>
+    </button>
   </nav>
 </header>
 
@@ -69,35 +71,7 @@
       being asked about.
     </p>
   </div>
-
-  <div class="grid">
-    <article class="card">
-      <div class="card__img"><img src="/products/p01.png" alt="Roots — United Heritage tee, white" loading="lazy"></div>
-      <div class="card__body">
-        <h3>Roots — United Heritage</h3>
-        <p class="card__meta">Unisex tee · White</p>
-        <p class="card__price">$38</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="card__img"><img src="/products/p02.png" alt="Roots and Renaissance tee, white" loading="lazy"></div>
-      <div class="card__body">
-        <h3>Roots &amp; Renaissance</h3>
-        <p class="card__meta">Unisex tee · White</p>
-        <p class="card__price">$38</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="card__img card__img--dark"><img src="/products/p03.png" alt="Infinite Sisters tee, black" loading="lazy"></div>
-      <div class="card__body">
-        <h3>Infinite</h3>
-        <p class="card__meta">Unisex tee · Black</p>
-        <p class="card__price">$38</p>
-      </div>
-    </article>
-  </div>
+  <div class="grid" id="gridHeritage"></div>
 </section>
 
 <section class="collection collection--alt" id="essentials">
@@ -109,35 +83,7 @@
       nothing shouting.
     </p>
   </div>
-
-  <div class="grid">
-    <article class="card">
-      <div class="card__img"><img src="/products/p05.png" alt="L and L hooded set in rose" loading="lazy"></div>
-      <div class="card__body">
-        <h3>L&amp;L Hooded Set</h3>
-        <p class="card__meta">Hoodie + jogger · Rose</p>
-        <p class="card__price">$120</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="card__img"><img src="/products/p07.png" alt="L and L cargo jogger in bone" loading="lazy"></div>
-      <div class="card__body">
-        <h3>L&amp;L Cargo Jogger</h3>
-        <p class="card__meta">Jogger · Bone</p>
-        <p class="card__price">$64</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="card__img card__img--dark"><img src="/products/p10.png" alt="LL pinstripe cap, black" loading="lazy"></div>
-      <div class="card__body">
-        <h3>LL Pinstripe Cap</h3>
-        <p class="card__meta">Adjustable · Black</p>
-        <p class="card__price">$34</p>
-      </div>
-    </article>
-  </div>
+  <div class="grid" id="gridEssentials"></div>
 </section>
 
 <section class="story" id="story">
@@ -157,9 +103,7 @@
       <strong>Essentials</strong> is the restraint — heavyweight fleece, cargo
       detailing, a monogram small enough that you have to be close to read it.
     </p>
-    <p>
-      Same name on the label. Different days of the week.
-    </p>
+    <p>Same name on the label. Different days of the week.</p>
   </div>
 </section>
 
@@ -181,6 +125,69 @@
   <p class="footer__line">Heritage &amp; Essentials</p>
   <p class="footer__fine">© 2026 Latrice Latrice. All rights reserved.</p>
 </footer>
+
+<!-- product detail -->
+<div class="modal" id="modal" hidden>
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="icon-btn modal__x" data-close aria-label="Close">&times;</button>
+    <div class="modal__media"><img id="modalImg" src="" alt=""></div>
+    <div class="modal__body">
+      <p class="eyebrow" id="modalCollection"></p>
+      <h3 id="modalTitle"></h3>
+      <p class="modal__price" id="modalPrice"></p>
+      <p class="modal__desc" id="modalDesc"></p>
+
+      <div class="field">
+        <span class="field__label">Size</span>
+        <div class="sizes" id="modalSizes" role="radiogroup" aria-label="Size"></div>
+      </div>
+
+      <div class="field">
+        <span class="field__label">Quantity</span>
+        <div class="qty">
+          <button class="qty__btn" id="qtyMinus" aria-label="Decrease quantity">&minus;</button>
+          <span class="qty__val" id="qtyVal" aria-live="polite">1</span>
+          <button class="qty__btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <button class="btn btn--solid btn--block" id="addToCart">Add to Cart</button>
+      <p class="modal__note">Free shipping on orders over $100.</p>
+    </div>
+  </div>
+</div>
+
+<!-- cart -->
+<div class="cart" id="cart" hidden>
+  <div class="cart__scrim" data-cart-close></div>
+  <aside class="cart__panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <header class="cart__head">
+      <h3 id="cartTitle">Your Cart</h3>
+      <button class="icon-btn" data-cart-close aria-label="Close cart">&times;</button>
+    </header>
+
+    <div class="cart__items" id="cartItems"></div>
+
+    <p class="cart__empty" id="cartEmpty">Your cart is empty.</p>
+
+    <footer class="cart__foot" id="cartFoot" hidden>
+      <div class="cart__row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+      <div class="cart__row cart__row--muted"><span>Shipping</span><span id="cartShip">—</span></div>
+      <div class="cart__row cart__row--total"><span>Total</span><span id="cartTotal">$0</span></div>
+      <button class="btn btn--solid btn--block" id="checkout">Checkout</button>
+    </footer>
+
+    <div class="cart__done" id="cartDone" hidden>
+      <p class="cart__doneMark">✓</p>
+      <h4>Order confirmed</h4>
+      <p>Thank you. A confirmation is on its way to your email.</p>
+      <button class="btn btn--ghost btn--block" data-cart-close>Continue Shopping</button>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="/script.js"></script>
 </body>
