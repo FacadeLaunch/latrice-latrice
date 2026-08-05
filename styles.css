@@ -506,12 +506,17 @@ body.is-locked{overflow:hidden}
   .nav__mark img{height:30px}
   .nav.is-stuck .nav__mark img{height:28px}
 
-  .hero{padding:0 0 clamp(2.5rem,8vw,3.5rem);gap:0}
-  .hero__art{border-radius:0;aspect-ratio:4/5;width:100%;box-shadow:none}
-  .hero__inner{padding:clamp(2rem,8vw,2.75rem) 1.25rem 0}
-  .hero__title{font-size:clamp(3.2rem,16vw,4.5rem)}
-  .hero__sub{font-size:1rem;margin-bottom:2rem}
-  .hero__actions .btn{flex:1 1 100%;text-align:center}
+  .hero{padding:0 0 clamp(2rem,7vw,3rem);gap:0}
+  .hero__art{border-radius:0;aspect-ratio:1;width:100%;box-shadow:none}
+  .hero__inner{padding:clamp(1.5rem,6vw,2.1rem) 1.25rem 0}
+  .hero__title{font-size:clamp(2.85rem,14vw,4rem)}
+  .hero__sub{font-size:.96rem;margin-bottom:1.45rem}
+  /* side by side rather than stacked, so both CTAs clear the fold */
+  .hero__actions{gap:.55rem;flex-wrap:nowrap}
+  .hero__actions .btn{
+    flex:1 1 0;min-width:0;text-align:center;
+    padding:.95rem .5rem;font-size:.62rem;letter-spacing:.13em;white-space:nowrap;
+  }
 
   .grid{grid-template-columns:1fr;gap:2.75rem}
   .cart__panel{width:100%}
