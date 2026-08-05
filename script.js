@@ -96,6 +96,7 @@
     var el = document.createElement('button');
     el.className = 'card';
     el.type = 'button';
+    el.setAttribute('data-reveal', '');
     el.setAttribute('aria-label', 'View ' + p.name);
     el.innerHTML =
       '<span class="card__img"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></span>' +
@@ -305,12 +306,64 @@
     });
   }
 
+  /* ---------- scroll motion ---------- */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function initReveal() {
+    var targets = document.querySelectorAll('[data-reveal]');
+    if (reduced || !('IntersectionObserver' in window)) {
+      [].forEach.call(targets, function (el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    [].forEach.call(targets, function (el) { io.observe(el); });
+  }
+
+  // stagger children of a revealed group so rows cascade instead of snapping
+  function stagger(sel, step) {
+    [].forEach.call(document.querySelectorAll(sel), function (el, i) {
+      el.style.setProperty('--d', (i * step) + 'ms');
+    });
+  }
+
+  function initScrollFx() {
+    var nav = document.querySelector('.nav');
+    var art = document.querySelector('.hero__art');
+    var ticking = false;
+
+    function frame() {
+      var y = window.pageYOffset;
+      nav.classList.toggle('is-stuck', y > 40);
+      if (!reduced && art && y < window.innerHeight * 1.4) {
+        // slow counter-drift; the hero settles rather than scrolling flat
+        art.style.transform = 'translate3d(0,' + (y * 0.07).toFixed(2) + 'px,0)';
+      }
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(frame);
+    }, { passive: true });
+    frame();
+  }
+
   /* ---------- wire up ---------- */
   function init() {
     load();
     renderCatalog();
     paintCart();
     initSignup();
+    stagger('.grid .card', 110);
+    stagger('.story__inner p', 90);
+    initReveal();
+    initScrollFx();
 
     $('qtyMinus').addEventListener('click', function () {
       if (qty > 1) { qty -= 1; $('qtyVal').textContent = qty; }
