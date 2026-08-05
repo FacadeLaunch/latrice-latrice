@@ -40,24 +40,35 @@
    drawer and cart badge all set display, so they must be forced closed. */
 [hidden]{display:none!important}
 
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{
+  scroll-behavior:smooth;-webkit-text-size-adjust:100%;
+  /* sticky nav would otherwise cover the top of every anchored section */
+  scroll-padding-top:6rem;
+}
 body{
   margin:0;
   background:var(--paper);
   color:var(--ink);
   font-family:"Inter",system-ui,-apple-system,sans-serif;
-  font-weight:300;
-  line-height:1.6;
+  font-weight:400;
+  line-height:1.55;
+  letter-spacing:-.004em;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-/* film grain — kills the flat "rendered in a browser" feel */
-body::after{
-  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
-  opacity:.055;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-}
 ::selection{background:var(--brass);color:#100E0C}
+
+/* film grain, layered into the surfaces that carry material rather than a
+   fixed full-viewport overlay (which forces one composited layer and costs
+   scroll performance on low-end devices) */
+:root{
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* visible keyboard focus on every interactive element, not just cards */
+:where(a,button,input,summary,[tabindex]):focus-visible{
+  outline:1px solid var(--brass);outline-offset:4px;border-radius:2px;
+}
 
 img{max-width:100%;display:block;height:auto}
 a{color:inherit;text-decoration:none}
@@ -159,7 +170,9 @@ h1,h2,h3,h4{
   position:relative;border-radius:2px;overflow:hidden;aspect-ratio:1;
   display:grid;place-items:center;
   background:
+    var(--grain),
     radial-gradient(120% 100% at 50% 0%,var(--plinth) 0%,var(--plinth-2) 100%);
+  background-blend-mode:overlay,normal;
   box-shadow:
     0 2px 0 rgba(255,255,255,.28) inset,
     0 50px 90px -50px rgba(0,0,0,.9),
@@ -191,6 +204,9 @@ h1,h2,h3,h4{
 .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn--ghost:hover{border-color:var(--brass);color:var(--brass);transform:translateY(-2px)}
 .btn--block{display:block;width:100%;text-align:center;border:0}
+.btn:active{transform:translateY(0) scale(.985)}
+.size:active,.qty__btn:active{transform:scale(.94)}
+.nav__cart:active{transform:scale(.97)}
 
 /* ---------- marquee ---------- */
 .marquee{
@@ -234,7 +250,8 @@ h1,h2,h3,h4{
 .card__img{
   position:relative;overflow:hidden;border-radius:2px;aspect-ratio:1;
   display:grid;place-items:center;
-  background:radial-gradient(120% 100% at 50% 0%,var(--plinth) 0%,var(--plinth-2) 100%);
+  background:var(--grain),radial-gradient(120% 100% at 50% 0%,var(--plinth) 0%,var(--plinth-2) 100%);
+  background-blend-mode:overlay,normal;
   box-shadow:
     0 2px 0 rgba(255,255,255,.26) inset,
     0 34px 60px -40px rgba(0,0,0,.85);
@@ -255,7 +272,7 @@ h1,h2,h3,h4{
 
 .card__body{padding:1.4rem .15rem 0;display:block}
 .card__title{
-  display:block;font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;
+  display:block;font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;
   font-size:clamp(1.5rem,2.2vw,2rem);line-height:1.1;margin-bottom:.35rem;
   letter-spacing:-.02em;
 }
@@ -281,8 +298,10 @@ h1,h2,h3,h4{
 .story{
   position:relative;z-index:2;padding:clamp(5rem,11vw,9rem) var(--pad);
   background:
+    var(--grain),
     radial-gradient(90% 60% at 15% 0%,rgba(199,154,79,.09) 0%,transparent 60%),
     var(--paper);
+  background-blend-mode:overlay,normal,normal;
   border-top:1px solid var(--line-soft);
 }
 .story__inner{max-width:56ch;margin:0 auto}
@@ -516,7 +535,6 @@ body.is-locked{overflow:hidden}
     --plinth:#FFFDF9;
     --plinth-2:#F3ECDF;
   }
-  body::after{mix-blend-mode:multiply;opacity:.04}
   .nav.is-stuck{background:rgba(241,235,225,.82)}
   .nav__mark img,.footer__mark{filter:none;mix-blend-mode:multiply}
   .btn--solid{background:var(--ink);color:#F1EBE1}
