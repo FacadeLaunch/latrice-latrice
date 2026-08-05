@@ -11,6 +11,9 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
+/* [hidden] is a UA rule, so any class that sets display beats it. The modal,
+   drawer and cart badge all set display, so they must be forced closed. */
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{
   margin:0;
